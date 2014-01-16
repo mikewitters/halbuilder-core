@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -141,5 +142,18 @@ public class MutableRepresentation extends BaseRepresentation implements Represe
         }
         return this;
     }
+
+	public Representation withRepresentation(String rel, ReadableRepresentation resource, boolean isMultiValue) {
+		setMultiValueExplicit(isMultiValue);
+		return withRepresentation(rel, resource);
+	}
+
+	public Representation withRepresentation(String rel, Set<ReadableRepresentation> resources) {
+		for(ReadableRepresentation rep : resources){
+			withRepresentation(rel, rep, true);
+		}
+		
+		return this;
+	}
 
 }

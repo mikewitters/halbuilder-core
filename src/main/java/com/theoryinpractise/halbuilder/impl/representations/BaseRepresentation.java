@@ -53,6 +53,8 @@ public abstract class BaseRepresentation implements ReadableRepresentation {
         }
     });
 
+    protected boolean isMultiValueExplicit = false;
+    
     protected NamespaceManager namespaceManager = new NamespaceManager();
 
     protected List<Link> links = Lists.newArrayList();
@@ -135,7 +137,6 @@ public abstract class BaseRepresentation implements ReadableRepresentation {
     private List<Link> getNaturalLinks() {
         return FluentIterable.from(links).transform(new Function<Link, Link>() {
             @Nullable
-            @Override
             public Link apply(@Nullable Link link) {
                 return new Link(representationFactory, namespaceManager.currieHref(link.getRel()), link.getHref(), link.getName(), link.getTitle(), link.getHreflang(), link.getProfile());
             }
@@ -204,7 +205,6 @@ public abstract class BaseRepresentation implements ReadableRepresentation {
     private <T> Function<Function<T, String>, String> mkSortableJoinerForIterable(final String join, final Iterable<T> ts) {
         return new Function<Function<T, String>, String>() {
             @Nullable
-            @Override
             public String apply(Function<T, String> f) {
                 return Joiner.on(join).skipNulls().join(usingToString().nullsFirst().sortedCopy(newHashSet(transform(ts, f))));
             }
@@ -326,5 +326,13 @@ public abstract class BaseRepresentation implements ReadableRepresentation {
             return "<Representation: @" + Integer.toHexString(hashCode()) + ">";
         }
     }
+
+	public boolean isMultiValueExplicit() {
+		return isMultiValueExplicit;
+	}
+
+	public void setMultiValueExplicit(boolean isMultiValueExplicit) {
+		this.isMultiValueExplicit = isMultiValueExplicit;
+	}
 
 }
